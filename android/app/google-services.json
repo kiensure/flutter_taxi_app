@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "221443279026",
+    "firebase_url": "https://taxiapp-51bb7.firebaseio.com",
+    "project_id": "taxiapp-51bb7",
+    "storage_bucket": "taxiapp-51bb7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221443279026:android:11a94401af3492be",
+        "android_client_info": {
+          "package_name": "com.megamus.taxi_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221443279026-s6s6tb5be8ck4obffuijf4hg21m1n397.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS2qHra27D77tO1aRHAfgWFIaQ2Lc3Hak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221443279026-s6s6tb5be8ck4obffuijf4hg21m1n397.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:taxi_app/src/resource/login_page.dart';
+import 'HomePage.dart';
+import 'blocs/auth_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -8,6 +10,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  AuthBloc authBloc = new AuthBloc();
+  TextEditingController _nameController = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passController = new TextEditingController();
+  TextEditingController _phoneController = new TextEditingController();
+
+  @override
+  void dispose() {
+    authBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,65 +47,93 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 80, 0, 20),
-                child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    prefixIcon: Container(
-                      width: 50,
-                      child: Image.asset('ic_user.png'),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
-                      borderRadius: BorderRadius.all(Radius.circular(6))
-                    )
-                  ),
+                child: StreamBuilder(
+                  stream: authBloc.nameStream,
+                  builder: (context, snapshot) {
+                    return TextField(
+                      controller: _nameController,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        labelText: 'Name',
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Image.asset('ic_user.png'),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(6))
+                        )
+                      ),
+                    );
+                  }
                 ),
               ),
-              TextField(
-                style: TextStyle(fontSize: 18, color: Colors.black),
-                decoration: InputDecoration(
-                    labelText: 'Phone Number',
-                    prefixIcon: Container(
-                      width: 50,
-                      child: Image.asset('ic_phone.png'),
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(6))
-                    )
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
-                      labelText: 'Email',
+              StreamBuilder(
+                stream: authBloc.phoneStream,
+                builder: (context, snapshot) {
+                  return TextField(
+                    controller: _phoneController,
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                    decoration: InputDecoration(
+                      errorText: snapshot.hasError ? snapshot.error : null,
+                      labelText: 'Phone Number',
                       prefixIcon: Container(
                         width: 50,
-                        child: Image.asset('ic_mail.png'),
+                        child: Image.asset('ic_phone.png'),
                       ),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
                           borderRadius: BorderRadius.all(Radius.circular(6))
                       )
-                  ),
+                    ),
+                  );
+                }
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: StreamBuilder(
+                  stream: authBloc.emailStream,
+                  builder: (context, snapshot) {
+                    return TextField(
+                      controller: _emailController,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        labelText: 'Email',
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Image.asset('ic_mail.png'),
+                        ),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(6))
+                        )
+                      ),
+                    );
+                  }
                 ),
               ),
-              TextField(
-                style: TextStyle(fontSize: 18, color: Colors.black),
-                decoration: InputDecoration(
-                    labelText: 'Password',
-                    prefixIcon: Container(
-                      width: 50,
-                      child: Image.asset('ic_lock.png'),
+              StreamBuilder(
+                stream: authBloc.passStream,
+                builder: (context, snapshot) {
+                  return TextField(
+                    controller: _passController,
+                    style: TextStyle(fontSize: 18, color: Colors.black),
+                    decoration: InputDecoration(
+                      errorText: snapshot.hasError ? snapshot.error : null,
+                      labelText: 'Password',
+                      prefixIcon: Container(
+                        width: 50,
+                        child: Image.asset('ic_lock.png'),
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(6))
+                      )
                     ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xffCED0D2), width: 1),
-                        borderRadius: BorderRadius.all(Radius.circular(6))
-                    )
-                ),
+                  );
+                }
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 30, 0, 40),
@@ -99,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: double.infinity,
                   height: 52,
                   child: RaisedButton(
-                      onPressed: () {},
+                      onPressed: _onSignUpClicked,
                       child: Text(
                         'Signup', 
                         style: TextStyle(fontSize: 18, color: Colors.white),
@@ -141,5 +183,15 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  _onSignUpClicked() {
+    var isValid = authBloc.isValid(_nameController.text, _emailController.text,
+        _passController.text, _phoneController.text);
+    if(isValid) {
+      authBloc.signUp(_emailController.text, _passController.text, _phoneController.text, _nameController.text, () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+      });
+    }
   }
 }
