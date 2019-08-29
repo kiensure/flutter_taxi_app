@@ -1,7 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:taxi_app/src/resource/dialog/message_dialog.dart';
-import 'package:taxi_app/src/resource/dialog/loading_dialog.dart';
 import 'package:taxi_app/src/resource/login_page.dart';
 import 'HomePage.dart';
 import 'blocs/auth_bloc.dart';
@@ -191,14 +189,8 @@ class _RegisterPageState extends State<RegisterPage> {
     var isValid = authBloc.isValid(_nameController.text, _emailController.text,
         _passController.text, _phoneController.text);
     if(isValid) {
-
-      LoadingDialog.showLoadingDialog(context, 'Loading...');
       authBloc.signUp(_emailController.text, _passController.text, _phoneController.text, _nameController.text, () {
-        LoadingDialog.hideLoadingDialog(context);
         Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-      }, (msg) {
-        LoadingDialog.hideLoadingDialog(context);
-        MessageDialog.showMessageDialog(context, 'Đăng ký', msg);
       });
     }
   }

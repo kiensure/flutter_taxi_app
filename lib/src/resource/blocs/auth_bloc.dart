@@ -51,12 +51,8 @@ class AuthBloc {
     return isValid;
   }
 
-  void signUp(String email, String password, String phone, String name, Function onSuccess, Function(String) onRegisterError) {
-    _fireAuth.signUp(email, password, name, phone, onSuccess, onRegisterError);
-  }
-
-  void signIn(String email, String password, Function onSuccess, Function(String) onSignInError) {
-    _fireAuth.signIn(email, password, onSuccess, onSignInError);
+  void signUp(String email, String password, String phone, String name, Function onSuccess) {
+    _fireAuth.signUp(email, password, name, phone, onSuccess);
   }
 
   void dispose() {
