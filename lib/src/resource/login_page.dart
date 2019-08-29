@@ -1,5 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:taxi_app/src/resource/HomePage.dart';
+import 'package:taxi_app/src/resource/dialog/message_dialog.dart';
+import 'package:taxi_app/src/resource/dialog/loading_dialog.dart';
+import 'blocs/auth_bloc.dart';
 import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,6 +12,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  AuthBloc authBloc = new AuthBloc();
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,44 +43,58 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 80, 0, 20),
-                child: TextField(
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Container(
-                      width: 50,
-                      child: Image.asset('ic_mail.png'),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color(0xffCED0D2),
-                        width: 1
+                child: StreamBuilder(
+                  stream: authBloc.emailStream,
+                  builder: (context, snapshot) {
+                    return TextField(
+                      controller: _emailController,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      decoration: InputDecoration(
+                        errorText: snapshot.hasError ? snapshot.error : null,
+                        labelText: 'Email',
+                        prefixIcon: Container(
+                          width: 50,
+                          child: Image.asset('ic_mail.png'),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0xffCED0D2),
+                            width: 1
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(6))
+                        )
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(6))
-                    )
-                  ),
+                    );
+                  }
                 ),
               ),
-              TextField(
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black
-                ),
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  prefixIcon: Container(
-                    width: 50,
-                    child: Image.asset('ic_phone.png'),
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xffCED0D2),
-                      width: 1
+              StreamBuilder(
+                stream: authBloc.passStream,
+                builder: (context, snapshot) {
+                  return TextField(
+                    controller: _passController,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(6))
-                  )
-                ),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      errorText: snapshot.hasError ? snapshot.error : null,
+                      labelText: 'Password',
+                      prefixIcon: Container(
+                        width: 50,
+                        child: Image.asset('ic_phone.png'),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xffCED0D2),
+                          width: 1
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(6))
+                      )
+                    ),
+                  );
+                }
               ),
               Container(
                 constraints: BoxConstraints.loose(Size(double.infinity, 30)),
@@ -88,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
                   height: 52,
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: _onSignInClicked,
                     child: Text(
                       'Log In',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -126,5 +148,18 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  _onSignInClicked() {
+    String email = _emailController.text;
+    String pass = _passController.text;
+    LoadingDialog.showLoadingDialog(context, 'Loading...');
+    authBloc.signIn(email, pass, () {
+      LoadingDialog.hideLoadingDialog(context);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+    }, (msg) {
+      LoadingDialog.hideLoadingDialog(context);
+      MessageDialog.showMessageDialog(context, 'Đăng nhập', msg);
+    });
   }
 }
